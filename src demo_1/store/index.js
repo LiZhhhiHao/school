@@ -5,11 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token:'',
+    sidelis:''
   },
   mutations: {
-    settoken(state, token){
-      state.token = token;
+    setsidelis(state, sidelis){
+      state.sidelis = sidelis;
     }
   },
   actions: {

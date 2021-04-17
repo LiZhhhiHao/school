@@ -28,19 +28,23 @@ const routes = [
       {
         path: "/mainpage/findUserList",
         component: () => import('../views/Mainpage/FindUserList.vue')
-      },
-      {
-        path: "/mainpage/findallroles",
-        component: () => import('../views/Mainpage/Findallroles.vue')
       }
     ]
   },
-  
- 
+  {
+    path: '/home',
+    name: 'Home',
+      component: () => import('../views/Home.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/About.vue')
+  }
 ]
 
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

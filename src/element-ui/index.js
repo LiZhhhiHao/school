@@ -1,4 +1,6 @@
-import { Button, Option, Select, Switch, MessageBox, Message, Dialog, Form, FormItem, Input, Icon, Tooltip, Loading, Container, Header, Main, Footer, Aside, Submenu, Row, Col, Menu, MenuItem, MenuItemGroup, RadioGroup, RadioButton, Table, TableColumn, Tag, Popover, Popconfirm, Notification } from 'element-ui'
+import {
+    Button, Option, Select, Switch, MessageBox, Message, Dialog, Form, FormItem, Input, Icon, Tooltip, Loading, Container, Header, Main, Footer, Aside, Submenu, Row, Col, Menu, MenuItem, MenuItemGroup, RadioGroup, RadioButton, Table, TableColumn, Tag, Popover, Popconfirm, Notification, Pagination, CheckboxGroup, Checkbox, DatePicker, TimePicker, Radio, Dropdown ,DropdownMenu, DropdownItem,
+} from 'element-ui'
 const element = {
     install: function (Vue) {
         Vue.use(Switch)
@@ -27,8 +29,18 @@ const element = {
         Vue.use(Table);
         Vue.use(TableColumn);
         Vue.use(Tag);
+        Vue.use(Pagination);
         Vue.use(Popover);
         Vue.use(Popconfirm);
+        Vue.use(CheckboxGroup);
+        Vue.use(Checkbox);
+        Vue.use(DatePicker);
+        Vue.use(Checkbox);
+        Vue.use(TimePicker);
+        Vue.use(Radio);
+        Vue.use(Dropdown);
+        Vue.use(DropdownMenu);
+        Vue.use(DropdownItem);
         Vue.component(Message.name, Message)
         Vue.use(Loading.directive);
         // 往vue实例原型里添加消息提示，方便全局调用

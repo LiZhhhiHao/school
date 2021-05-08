@@ -7,7 +7,7 @@
       label-position="left"
       class="login"
     >
-      <h2>登录</h2>
+      <h2>进出校园审批系统</h2>
       <el-form-item prop="username">
         <el-input
           ref="username"
@@ -71,7 +71,7 @@
     h2 {
       font-weight: bold;
       margin-bottom: 2rem;
-      font-size: 3vw;
+      font-size: 1.8vw;
       letter-spacing: 2rem;
       text-indent: 2rem;
     }
@@ -116,24 +116,48 @@ export default {
             username: this.form.username,
             password: this.form.password,
           },
-        }).then((data) => {
-          this.loading = false;
-          if (data.data.code == 200) {
-            this.$message({
-              message: "登陆成功",
-              type: "success",
-              center: true,
-            });
-            this.$router.push("/mainpage");
-            this.$store.commit("settoken", data.data.result.token);
-          } else if (data.data.code == 400) {
-          this.loading = false;
-            this.$message({
-              message: data.data.message,
-              center: true,
-            });
-          }
-        });
+        })
+          .then((data) => {
+            this.loading = false;
+            if (data.data.code == 200) {
+              this.$message({
+                message: "登陆成功",
+                type: "success",
+                center: true,
+              });
+              this.$router.push("/mainpage");
+              this.$store.commit("settoken", data.data.result.token);
+              this.axios({
+                method: "post",
+                url: "/findUser",
+                headers: {
+                  Authorization: this.$store.state.token,
+                },
+              }).then((data) => {
+                console.log(data.data.result);
+                if (data.data.code == 200) {
+                  this.$store.commit("setuser", data.data.result);
+                } else {
+                  this.$message({
+                    message: "获取用户信息失败",
+                    type: "error",
+                  });
+                }
+              });
+            } else if (data.data.code == 400) {
+              this.loading = false;
+              this.$message({
+                message: data.data.message,
+                center: true,
+              });
+            } else {
+              this.loading = false;
+              this.$notify.error({
+                title: "登陆失败",
+                message: "填写格式不规范",
+              });
+            }
+          })
       });
     },
     // success() {

@@ -35,6 +35,11 @@ body,
 </style>
 <script>
 export default {
+  data() {
+    return {
+      token: this.$store.state.token,
+    };
+  },
   created() {
     //在页面刷新时将vuex里的信息保存到localStorage里
     window.addEventListener("beforeunload", () => {
@@ -49,6 +54,24 @@ export default {
         )
       );
     // replaceState这个方法呢，查了api，就是替换 store 的根状态，然后通过对象赋值assign将localStorage进行赋值
+  },
+  computed: {
+    getToken() {
+      return this.$store.state.token;
+    },
+  },
+  watch: {
+    token(val) {
+      if (val == "") {
+        this.$router.push("/");
+      }
+    },
+    getToken(val) {
+      // this.userIcons = val;
+      if (val == "") {
+        this.$router.push("/");
+      }
+    },
   },
 };
 </script>

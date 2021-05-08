@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table">
     <!-- <button @click="test" >1111</button> -->
     <!-- <el-button @click="resetDateFilter">清除日期过滤器</el-button>
     <el-button @click="clearFilter">清除所有过滤器</el-button> -->
@@ -50,102 +50,7 @@
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
             编辑</el-button
           >
-          <el-dialog :visible.sync="dialogFormVisible" center>
-            <div class="difs" v-loading="loading" v-if="form == ''"></div>
-            <el-form :model="form" v-if="form != ''">
-              <el-form-item label="用户ID" :label-width="formLabelWidth">
-                {{ form.id }}
-              </el-form-item>
-              <el-form-item label="用户名" :label-width="formLabelWidth" prop="realname">
-                <el-input v-model="form.realname" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
-                <el-input v-model="form.username" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                <el-input v-model="form.email" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="角色" :label-width="formLabelWidth">
-                <el-select v-model="form.roleId" placeholder="请选择角色">
-                  <el-option
-                    v-for="(role, index) in roles"
-                    :key="index"
-                    :label="role.name"
-                    :value="role.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="学院"
-                :label-width="formLabelWidth"
-                class="connection"
-                prop="department"
-              >
-                <div class="ins">{{ form.department }}</div>
-                <el-select
-                  v-model="dep"
-                  placeholder="请选择学院"
-                  @change="getdep($event, 0)"
-                >
-                  <el-option
-                    v-for="(department, index) in departments"
-                    :key="index"
-                    :label="department.name"
-                    :value="department.name"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                class="connection"
-                label="专业"
-                :label-width="formLabelWidth"
-                v-if="form.roleId != '4'"
-                prop="specoalty"
-              >
-                <div class="ins">{{ form.specoalty }}</div>
-                <el-select
-                  v-model="spe"
-                  placeholder="请选择专业"
-                  @change="getdep($event, 1)"
-                >
-                  <el-option
-                    v-for="(specoalty, index) in specoaltys"
-                    :key="index"
-                    :label="specoalty.name"
-                    :value="specoalty.name"
-                  ></el-option>
-                </el-select>
-                <!-- {{form.specoalty}} -->
-              </el-form-item>
-              <el-form-item
-                class="connection"
-                label="班级"
-                :label-width="formLabelWidth"
-                v-if="select_type(form.roleId)"
-                prop="classname"
-              >
-                <div class="ins">{{ form.classname }}</div>
-                <el-select
-                  v-model="clas"
-                  placeholder="请选择班级"
-                  @change="getdep($event, 2)"
-                >
-                  <el-option
-                    v-for="(cla, index) in classname"
-                    :key="index"
-                    :label="cla.name"
-                    :value="cla.name"
-                  ></el-option>
-                </el-select>
-                <!-- {{ form.classname }} -->
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <!-- <el-button @click="savedata">取 消</el-button> -->
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="getdata">确 定</el-button>
-            </div>
-          </el-dialog>
+
           <!-- <el-button
             size="mini"
             type="danger"
@@ -177,46 +82,173 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog :visible.sync="dialogFormVisible" append-to-body center>
+      <div class="difs" v-loading="loading" v-if="form == ''"></div>
+      <el-form
+        :model="form"
+        :rules="rules"
+        v-if="form != ''"
+        ref="informations"
+      >
+        <el-form-item label="用户ID" :label-width="formLabelWidth">
+          {{ form.id }}
+        </el-form-item>
+        <el-form-item label="权限" :label-width="formLabelWidth">
+          <span v-for="(M, index) in Management" :key="index"
+            >{{ M.name }}
+          </span>
+        </el-form-item>
+        <el-form-item
+          label="用户名"
+          :label-width="formLabelWidth"
+          prop="realname"
+        >
+          <el-input v-model="form.realname" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="账号"
+          :label-width="formLabelWidth"
+          prop="username"
+        >
+          <el-input v-model="form.username" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+          <el-input v-model="form.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色" :label-width="formLabelWidth">
+          <el-select
+            v-model="form.roleId"
+            placeholder="请选择角色"
+            @change="clearall"
+          >
+            <el-option
+              v-for="(role, index) in roles"
+              :key="index"
+              :label="role.name"
+              :value="role.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="学院"
+          :label-width="formLabelWidth"
+          class="connection"
+          prop="department"
+        >
+          <div class="ins">{{ form.department }}</div>
+          <el-select
+            v-model="dep"
+            placeholder="请选择学院"
+            @change="getdep($event, 0)"
+          >
+            <el-option
+              v-for="(department, index) in departments"
+              :key="index"
+              :label="department.name"
+              :value="department.name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          class="connection"
+          label="专业"
+          :label-width="formLabelWidth"
+          v-if="form.roleId != '4'"
+          prop="specoalty"
+        >
+          <div class="ins">{{ form.specoalty }}</div>
+          <el-select
+            v-model="spe"
+            placeholder="请选择专业"
+            @change="getdep($event, 1)"
+          >
+            <el-option
+              v-for="(specoalty, index) in specoaltys"
+              :key="index"
+              :label="specoalty.name"
+              :value="specoalty.name"
+            ></el-option>
+          </el-select>
+          <!-- {{form.specoalty}} -->
+        </el-form-item>
+        <el-form-item
+          class="connection"
+          label="班级"
+          :label-width="formLabelWidth"
+          v-if="select_type(form.roleId)"
+          prop="classname"
+        >
+          <div class="ins">{{ form.classname }}</div>
+          <el-select
+            v-model="clas"
+            placeholder="请选择班级"
+            @change="getdep($event, 2)"
+          >
+            <el-option
+              v-for="(cla, index) in classname"
+              :key="index"
+              :label="cla.name"
+              :value="cla.name"
+            ></el-option>
+          </el-select>
+          <!-- {{ form.classname }} -->
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <!-- <el-button @click="savedata">取 消</el-button> -->
+        <el-button type="primary" @click.native="getdata('informations', scope)"
+          >确 定</el-button
+        >
+        <el-button @click="notsure">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 // import { Loading } from "element-ui";
 export default {
-  props: ["tabledatas"],
+  props: ["tabledatas", "pagenum", "pagesizes"],
 
   data() {
-    var checkAge = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("年龄不能为空"));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
-    };
-    var validatePass = (rule, value, callback) => {
+    var validateRealname = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入密码"));
+        callback(new Error("请输入用户名"));
       } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
         callback();
       }
     };
-    var validatePass2 = (rule, value, callback) => {
+    var validateUsername = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error("请输入账号"));
+      } else {
+        callback();
+      }
+    };
+    var validateEmail = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入邮箱"));
+      } else {
+        callback();
+      }
+    };
+    var validateDepartment = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请选择学院"));
+      } else {
+        callback();
+      }
+    };
+    var validateSpecoalty = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请选择专业"));
+      } else {
+        callback();
+      }
+    };
+    var validateClassname = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请选择班级"));
       } else {
         callback();
       }
@@ -238,17 +270,16 @@ export default {
       spe: "",
       clas: "",
       loading: false,
-       rules: {
-          pass: [
-            { validator: validatePass, trigger: 'blur' }
-          ],
-          checkPass: [
-            { validator: validatePass2, trigger: 'blur' }
-          ],
-          age: [
-            { validator: checkAge, trigger: 'blur' }
-          ]
-        }
+      editObj: "",
+      Management: "",
+      rules: {
+        realname: [{ validator: validateRealname, trigger: "change" }],
+        username: [{ validator: validateUsername, trigger: "change" }],
+        email: [{ validator: validateEmail, trigger: "change" }],
+        department: [{ validator: validateDepartment, trigger: "change" }],
+        specoalty: [{ validator: validateSpecoalty, trigger: "change" }],
+        classname: [{ validator: validateClassname, trigger: "change" }],
+      },
     };
   },
   computed: {
@@ -279,34 +310,6 @@ export default {
       });
       // console.log(this.id_filter);
     },
-    // "form.department": {
-    //   deep: true,
-    //   handler(e) {
-    //     // console.log(e);
-    //     // if (this.form.specoalty != undefined) {
-    //     // console.log(1);
-    //     let current = this.departments.filter((item) => {
-    //       return item.name == e;
-    //     });
-    //     // console.log(current[0]);
-    //     // this.form.specoalty = current[0].children[0].name;
-    //     this.specoaltys = current[0].children;
-    //     // console.log(this.specoaltys);
-    //     // }
-    //   },
-    // },
-    // "form.specoalty": {
-    //   deep: true,
-    //   handler(el) {
-    //     // console.log(el);
-    //     let current = this.specoaltys.filter((item) => {
-    //       return item.name == el;
-    //     });
-    //     // console.log(current[0]);
-    //     // this.form.classname = current[0].children[0].name;
-    //     this.classname = current[0].children;
-    //   },
-    // },
   },
   methods: {
     // test(){
@@ -326,6 +329,14 @@ export default {
     filterHandler(value, row, column) {
       const property = column["property"];
       return row[property] === value;
+    },
+    clearall() {
+      this.dep = "";
+      this.spe = "";
+      this.clas = "";
+      this.form.department = "";
+      this.form.specoalty = "";
+      this.form.classname = "";
     },
     getdep(e, num) {
       if (num == 0) {
@@ -360,16 +371,44 @@ export default {
       //   lock: true,
       //   target: ".difs",
       // });
-      // console.log(index, row.id);
+      console.log(row.id);
+      this.Management = "";
+
+      // 获取用户的权限
+      this.axios({
+        method: "post",
+        url: "/loadMyPermissions",
+        headers: {
+          Authorization: this.$store.state.token,
+        },
+        data: {
+          id: row.roleId,
+        },
+      }).then((data) => {
+        console.log(data);
+        if (data.data.code == 200) {
+          this.Management = data.data.result;
+          console.log(this.Management);
+          this.loading = false;
+          // loadingInstance.close();
+        }
+      });
+
+      this.editObj = row;
       this.form = "";
       this.loading = true;
+      // 获取用户信息
       this.axios({
         method: "post",
         url: "/findUserById",
+        headers: {
+          Authorization: this.$store.state.token,
+        },
         data: {
           id: row.id,
         },
       }).then((data) => {
+        console.log(data);
         if (data.data.code == 200) {
           let users = data.data.result.userCustom;
           this.form = {
@@ -384,55 +423,92 @@ export default {
             classname: users.classname,
           };
           // console.log(users);
-          // console.log(this.form);
+          console.log(this.form);
           this.loading = false;
           // loadingInstance.close();
         }
       });
 
       this.dialogFormVisible = true;
+      // console.log(this.dialogFormVisible);
     },
     // 获取表单数据并修改用户数据
-    getdata() {
-      console.log(this.form.id);
-      this.axios({
-        method: "post",
-        url: "/changeUser",
-        data: this.form,
-      }).then((data) => {
-        console.log(data);
-        if (data.data.code == 200) {
-          this.$notify({
-            title: "保存成功",
-            message: "已经保存成功",
-            type: "success",
-          });
-          // this.axios({
-          //   method: "post",
-          //   url: "/findallroles",
-          //   headers: {
-          //     Authorization: this.$store.state.token,
-          //   },
-          //   data: {
-          //     // pageNum:1,
-          //     // pageSize:5
-          //   },
-          // }).then((data) => {
-          //   if (data.data.code == 200) {
-          //     // console.log(data);
-          //     this.tabledatas = data.data.result.allRoles;
-          //     // console.log(this.allRoles);
-          //   }
-          // });
+    getdata(informations, scope) {
+      // console.log(this.form.id);
+      // console.log(informations);
+      console.log(scope);
+      this.$refs[informations].validate((valid) => {
+        // console.log(valid);
+        if (valid) {
+          // alert('submit!');
+          if (this.form.specoalty === "") {
+            this.$notify.error({
+              title: "保存失败",
+              message: "学部未填写",
+            });
+          } else if (this.form.department === "" && this.form.roleId != 4) {
+            this.$notify.error({
+              title: "保存失败",
+              message: "专业未填写",
+            });
+          } else if (
+            this.form.classname === "" &&
+            this.form.roleId != 4 &&
+            this.form.roleId != 3
+          ) {
+            this.$notify.error({
+              title: "保存失败",
+              message: "班级未填写",
+            });
+          } else {
+            this.axios({
+              method: "post",
+              url: "/changeUser",
+              data: this.form,
+              headers: {
+                Authorization: this.$store.state.token,
+              },
+            })
+              .then((data) => {
+                if (data.data.code == 200) {
+                  this.editObj.realname = this.form.realname;
+                  this.editObj.username = this.form.username;
+                  this.editObj.roleId = this.form.roleId;
+                  this.editObj.rolename = this.form.rolename;
+                  this.editObj.email = this.form.email;
+                  this.$notify({
+                    title: "修改成功",
+                    message: "已经保存成功",
+                    type: "success",
+                  });
+                  this.$parent.getpage(this.pagenum, this.pagesizes);
+                } else {
+                  this.$notify.error({
+                    title: "保存失败",
+                    message: "填写格式不规范",
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            this.dialogFormVisible = false;
+            console.log("ok");
+          }
         } else {
-          this.$notify.error({
-            title: "保存失败",
-            message: "填写格式不规范",
-          });
+          console.log("error submit!!");
+          return false;
         }
       });
+    },
+    // 点击取消
+    notsure() {
+      this.spe = "";
+      this.clas = "";
+      this.dep = "";
       this.dialogFormVisible = false;
     },
+
     // 点击取消是否保存数据
     // savedata() {
     //   this.$confirm("是否保留信息?", "提示", {
@@ -454,14 +530,23 @@ export default {
     //       });
     //     });
     // },
-    // 删除用户
+
     delrow(scope) {
+      // 删除用户
       let idx = this.td.findIndex((ele) => {
         return ele.id == scope.row.id;
       });
       this.td.splice(idx, 1);
 
-      this.axios.post("/deleuser", { id: scope.row.id }).then((data) => {
+      // this.axios.post("/deleuser", { id: scope.row.id }).then((data) => {
+      this.axios({
+        method: "post",
+        url: "/deleuser",
+        data: { id: scope.row.id },
+        headers: {
+          Authorization: this.$store.state.token,
+        },
+      }).then((data) => {
         if (data.data.code == 200) {
           this.$message({
             message: data.data.message,
@@ -486,12 +571,15 @@ export default {
     this.axios({
       method: "post",
       url: "/findallroles",
+      headers: {
+        Authorization: this.$store.state.token,
+      },
     }).then((data) => {
       // console.log(data);
       this.roles = data.data.result.allRoles;
       // console.log(this.roles.slice(1, 5));
       this.roles = this.roles.slice(1, 5);
-      // console.log(this.roles);
+      console.log(this.roles);
       this.roles.forEach((ele) => {
         // console.log(ele);
         this.rolename_filter.push({ text: ele.name, value: ele.name });
@@ -500,8 +588,11 @@ export default {
     this.axios({
       method: "post",
       url: "/findDepartment",
+      headers: {
+        Authorization: this.$store.state.token,
+      },
     }).then((data) => {
-      // console.log(data.data.children);
+      console.log(data.data.children);
       this.departments = data.data.children;
       // console.log(this.departments);
     });
@@ -509,7 +600,7 @@ export default {
 };
 </script>
 <style lang="less">
-.connection .el-form-item__content {
+.table .connection .el-form-item__content {
   display: flex;
   .ins {
     width: 200px;

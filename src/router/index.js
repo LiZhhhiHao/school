@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
-
+// import store from '../store/index'
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,32 +15,53 @@ const routes = [
     path: '/mainpage',
     name: 'Mainpage',
     component: () => import('../views/Mainpage.vue'),
-    props:true,
+    props: true,
     children: [
       {
-        path: '/mainpage/in',
-        component: ()=>import('../views/Mainpage/In.vue')
+        path: '/mainpage/saveapplication',
+        component: () => import('../views/Mainpage/stu/Saveapplication.vue'),
+        
       },
       {
-        path: '/mainpage/user',
-        component: () => import('../views/Mainpage/User.vue')
+        path: '/mainpage/application',
+        component: () => import('../views/Mainpage/stu/Application.vue')
+      },
+      {
+        path: '/mainpage/audit',
+        component: () => import('../views/Mainpage/master/Audit.vue')
       },
       {
         path: "/mainpage/findUserList",
-        component: () => import('../views/Mainpage/FindUserList.vue')
+        component: () => import('../views/Mainpage/admin/FindUserList.vue')
       },
       {
         path: "/mainpage/findallroles",
-        component: () => import('../views/Mainpage/Findallroles.vue')
+        component: () => import('../views/Mainpage/admin/Findallroles.vue')
+      },
+      {
+        path: "/mainpage/statisticalForm",
+        component: () => import('../views/Mainpage/master/StatisticalForm.vue')
       }
-    ]
+    ],
+    // beforeEnter: (to, from, next) => {
+    //   let loginData = store.state.token;
+    //   console.log(loginData);
+    //   if (loginData != '') {
+    //     console.log(11111);
+    //     next();
+    //   } else {
+    //     next({
+    //       name: 'Login',
+    //     });
+    //   }
+    // }
   },
-  
- 
+
+
 ]
 
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
